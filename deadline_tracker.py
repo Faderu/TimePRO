@@ -41,18 +41,16 @@ class Deadline:
         status (DeadlineStatus): The current status of the deadline.
         priority (DeadlinePriority): The priority level of the deadline.
         created_date (str): The date and time when the deadline was created as a string.
-        tags (set): A set of tags associated with the deadline.
     """
 
-    def __init__(self, title, description="", due_date_str=None, priority=DeadlinePriority.MEDIUM):
+    def __init__(self, title, description="", due_date=None, reminders=[], status=DeadlineStatus.PENDING, priority=DeadlinePriority.MEDIUM, created_date=None):
         self.title = title
         self.description = description
-        self.due_date = due_date_str
+        self.due_date = due_date
         self.reminders = [timedelta(days=1), timedelta(hours=1)]
         self.status = DeadlineStatus.PENDING
         self.priority = priority
         self.created_date = datetime.now().strftime('%Y-%m-%d %H:%M')
-        self.tags = set()
         print(f"Deadline '{self.title}' created.")
 
     def add_reminder(self, reminder):
@@ -74,26 +72,6 @@ class Deadline:
         """
         self.reminders.remove(reminder)
         print(f"Reminder removed from deadline '{self.title}'.")
-
-    def add_tag(self, tag):
-        """
-        Add a tag to the deadline.
-
-        Args:
-            tag (str): The tag to add.
-        """
-        self.tags.add(tag.lower())
-        print(f"Tag '{tag}' added to deadline '{self.title}'.")
-
-    def remove_tag(self, tag):
-        """
-        Remove a tag from the deadline.
-
-        Args:
-            tag (str): The tag to remove.
-        """
-        self.tags.discard(tag.lower())
-        print(f"Tag '{tag}' removed from deadline '{self.title}'.")
 
     def mark_completed(self):
         """
@@ -154,7 +132,6 @@ class Deadline:
             'status': self.status.name,
             'priority': self.priority.name,
             'created_date': self.created_date,
-            'tags': list(self.tags)
         }
 
     @classmethod
@@ -173,7 +150,6 @@ class Deadline:
         deadline.reminders = [timedelta(seconds=float(r)) for r in data['reminders']]
         deadline.status = DeadlineStatus[data['status']]
         deadline.created_date = data['created_date']
-        deadline.tags = set(data['tags'])
         return deadline
 
     def __str__(self):
@@ -266,19 +242,6 @@ class DeadlineTracker:
         """
         print(f"Fetching deadlines by priority '{priority.name}'.")
         return [d for d in self.deadlines if d.priority == priority]
-
-    def get_deadlines_by_tag(self, tag):
-        """
-        Get all deadlines with a specific tag.
-
-        Args:
-            tag (str): The tag to filter by.
-
-        Returns:
-            list: A list of Deadline objects with the specified tag.
-        """
-        print(f"Fetching deadlines by tag '{tag}'.")
-        return [d for d in self.deadlines]
     
     def get_upcoming_deadlines(self, days=7):
         """
@@ -380,10 +343,19 @@ class DeadlineTracker:
             report += f"\n{deadline}\n"
             report += f"  Description: {deadline.description}\n"
             report += f"  Created Date: {deadline.created_date}\n"
-            report += f"  Tags: {', '.join(deadline.tags) if deadline.tags else 'None'}\n"
             report += f"  Reminders: {', '.join(str(r) for r in deadline.reminders)}\n"
 
         return report
+
+class DeadlineFileManager:
+    def __init__(self, deadlines=None):
+        """
+        Initialize the DeadlineFileManager.
+
+        Args:
+            deadlines (list): Optional list of Deadline objects.
+        """
+        self.deadlines = deadlines if deadlines else []
 
     def save_to_json(self, filename):
         """
@@ -428,7 +400,7 @@ class DeadlineTracker:
         for deadline_data in data:
             deadline = Deadline.from_dict(deadline_data)
             self.deadlines.append(deadline)
-    
+
     def save_to_csv(self, filename):
         """
         Save the deadlines to a CSV file.
@@ -442,7 +414,7 @@ class DeadlineTracker:
         try:
             with open(filename, 'w', newline='') as f:
                 writer = csv.writer(f)
-                writer.writerow(['Title', 'Description', 'Due Date', 'Reminders', 'Status', 'Priority', 'Created Date', 'Tags'])
+                writer.writerow(['Title', 'Description', 'Due Date', 'Reminders', 'Status', 'Priority', 'Created Date'])
                 for deadline in self.deadlines:
                     writer.writerow([
                         deadline.title,
@@ -452,7 +424,6 @@ class DeadlineTracker:
                         deadline.status.name,
                         deadline.priority.name,
                         deadline.created_date,
-                        ','.join(deadline.tags)
                     ])
             print(f"Deadlines saved to CSV file '{filename}'.")
         except IOError as e:
@@ -484,10 +455,89 @@ class DeadlineTracker:
                         deadline.reminders = [timedelta(seconds=float(r)) for r in row['Reminders'].split(';') if r]
                         deadline.status = DeadlineStatus[row['Status']]
                         deadline.created_date = row['Created Date']
-                        deadline.tags = set(row['Tags'].split(',')) if row['Tags'] else set()
                         self.deadlines.append(deadline)
                     except (KeyError, ValueError) as e:
                         print(f"Warning: Skipping invalid row: {e}")
             print(f"Loaded deadlines from CSV file '{filename}'.")
         except IOError as e:
             raise IOError(f"Error loading from CSV file: {e}")
+
+# Buat objek DeadlineTracker
+tracker = DeadlineTracker()
+
+# Buat beberapa objek Deadline
+deadline1 = Deadline("Deadline 1", description="Tugas Algo", due_date="2024-10-15 14:00", priority=DeadlinePriority.HIGH, )
+deadline2 = Deadline("Deadline 2", due_date="2024-10-20 10:00", priority=DeadlinePriority.MEDIUM)
+deadline3 = Deadline("Deadline 3", due_date="2024-10-25 12:00", priority=DeadlinePriority.LOW)
+
+# Tambahkan deadline ke tracker
+tracker.add_deadline(deadline1)
+tracker.add_deadline(deadline2)
+tracker.add_deadline(deadline3)
+
+# Cek deadline yang aktif
+print("Deadline Aktif:")
+for deadline in tracker.get_active_deadlines():
+    print(deadline)
+
+# Cek deadline yang telah selesai
+print("\nDeadline Selesai:")
+for deadline in tracker.get_completed_deadlines():
+    print(deadline)
+
+# Cek deadline yang telah lewat waktu
+print("\nDeadline Lewat Waktu:")
+for deadline in tracker.get_missed_deadlines():
+    print(deadline)
+
+# Cek deadline berdasarkan prioritas
+print("\nDeadline Berdasarkan Prioritas:")
+for priority in DeadlinePriority:
+    print(f"Prioritas {priority.name}:")
+    for deadline in tracker.get_deadlines_by_priority(priority):
+        print(deadline)
+
+# Cek deadline yang akan datang
+print("\nDeadline Akan Datang:")
+for deadline in tracker.get_upcoming_deadlines():
+    print(deadline)
+
+# Cek deadline yang lewat waktu
+print("\nDeadline Lewat Waktu:")
+for deadline in tracker.get_overdue_deadlines():
+    print(deadline)
+
+# Periksa pengingat
+print("\nPengingat:")
+for deadline, reminder in tracker.check_reminders():
+    print(f"Deadline '{deadline.title}' memiliki pengingat {reminder}")
+
+# Perbarui status deadline
+tracker.update_deadline_statuses()
+
+# Cek tingkat penyelesaian deadline
+print("\nTingkat Penyelesaian Deadline:")
+print(tracker.get_completion_rate())
+
+# Buat laporan deadline
+print("\nLaporan Deadline:")
+print(tracker.generate_deadline_report())
+
+# Simpan deadline ke file JSON
+file_manager = DeadlineFileManager(tracker.deadlines)
+file_manager.save_to_json("deadlines.json")
+
+# Muat deadline dari file JSON
+file_manager.load_from_json("deadlines.json")
+print("\nDeadline yang Dimuat:")
+for deadline in file_manager.deadlines:
+    print(deadline)
+
+# Simpan deadline ke file CSV
+file_manager.save_to_csv("deadlines.csv")
+
+# Muat deadline dari file CSV
+file_manager.load_from_csv("deadlines.csv")
+print("\nDeadline yang Dimuat:")
+for deadline in file_manager.deadlines:
+    print(deadline)
