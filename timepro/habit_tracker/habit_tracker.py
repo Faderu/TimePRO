@@ -1,17 +1,3 @@
-"""
-Habit Tracker Module
-
-This module provides classes for tracking habits, managing their progress, and setting reminders.
-
-Classes:
-    HabitCategory: An enumeration of possible habit categories (e.g., Health, Learning, Productivity).
-    Habit: Represents a single habit, including attributes like name, target, category, history, and reminder settings.
-    HabitTracker: Manages a collection of habits, allowing users to add, track, and report on their habits over time.
-
-The module includes functionality to save and load habit data in both JSON and CSV formats,
-allowing users to maintain their habit tracking information between sessions and choose their preferred file format.
-"""
-
 import datetime
 import json
 import csv
@@ -26,17 +12,6 @@ class HabitCategory(Enum):
         LEARNING: Represents habits related to learning.
         PERSONAL: Represents personal habits.
         OTHER: Represents habits that do not fall into the above categories.
-
-      
-    Example:
-        >>> category = HabitCategory.HEALTH
-        >>> print(category.name)
-        HEALTH
-        >>> print(category.value)
-        1
-        >>> if category == HabitCategory.HEALTH:
-        ...     print("This is a health-related habit.")
-        This is a health-related habit.
     """
     HEALTH = 1
     PRODUCTIVITY = 2
@@ -55,16 +30,17 @@ class Habit:
         reminder_set (bool): A flag to indicate if a reminder is set for the habit.
     
     Methods:
-        __init__(name, target, category): Initializes a new habit.
+        _init_(name, target, category): Initializes a new habit.
         _parse_date_input(date_str): Parses a date string to return a date object.
         mark_done(date_input): Marks the habit as done for the specified date.
         check_progress(start_date_input, end_date_input): Checks the progress of the habit.
         set_reminder(): Sets a reminder for the habit.
         get_streak(): Returns the current streak of consecutive days the habit has been completed.
-        __str__(): Returns a string representation of the habit.
+        _str_(): Returns a string representation of the habit.
     """
 
-    def __init__(self, name, target, category):
+    def _init_(self, name, target, category, history={}, reminder_set=False):
+        print(f"Initializing habit: {name}")
         self.name = name
         self.target = target
         self.category = category
@@ -86,34 +62,24 @@ class Habit:
                 return datetime.date.today()
 
     def mark_done(self, date_input="today"):
-        """Marks the habit as done for the specified date.
+        """
+        Marks the habit as done for the specified date.
 
         Args:
             date_input (str): The date for which to mark the habit as done (default is "today").
-
-        Example:
-            >>> habit = Habit("Exercise", "30 minutes daily", HabitCategory.HEALTH)
-            >>> habit.mark_done("2024-10-01")
-            >>> print(habit.history)
-            {datetime.date(2024, 10, 1): True}
         """
+        print(f"Marking {self.name} as done for {date_input}")
         date = self._parse_date_input(date_input)
         self.history[date] = True
 
     def check_progress(self, start_date_input="today", end_date_input="today"):
-        """Checks the progress of the habit between the specified dates.
+        """
+        Checks the progress of the habit between the specified dates.
 
         Returns:
             tuple: The number of completed days and total days in the given range.
-
-        Example:
-            >>> habit = Habit("Read", "1 chapter daily", HabitCategory.LEARNING)
-            >>> habit.mark_done("2024-10-01")
-            >>> habit.mark_done("2024-10-02")
-            >>> completed, total = habit.check_progress("2024-10-01", "2024-10-02")
-            >>> print(completed, total)
-            (2, 2)
         """
+        print(f"Checking progress of {self.name} between {start_date_input} and {end_date_input}")
         start_date = self._parse_date_input(start_date_input)
         end_date = self._parse_date_input(end_date_input)
 
@@ -124,26 +90,12 @@ class Habit:
         return completed_days, total_days
 
     def set_reminder(self):
-        """Sets a reminder for the habit.
-
-        Example:
-            >>> habit = Habit("Meditate", "10 minutes daily", HabitCategory.HEALTH)
-            >>> habit.set_reminder()
-            >>> print(habit.reminder_set)
-            True
-        """
+        """Sets a reminder for the habit."""
+        print(f"Setting reminder for {self.name}")
         self.reminder_set = True
 
     def get_streak(self):
-        """Returns the current streak of consecutive days the habit has been completed.
-
-        Example:
-            >>> habit = Habit("Run", "5km daily", HabitCategory.HEALTH)
-            >>> habit.mark_done("2024-10-01")
-            >>> habit.mark_done("2024-10-02")
-            >>> print(habit.get_streak())
-            2
-        """
+        """Returns the current streak of consecutive days the habit has been completed."""
         if not self.history:
             return 0
         
@@ -155,48 +107,39 @@ class Habit:
             streak += 1
             current_date -= datetime.timedelta(days=1)
 
+        print(f"Streak of {self.name} is {streak} days")
         return streak
 
-    def __str__(self):
-        """Returns a string representation of the habit.
-
-        Example:
-            >>> habit = Habit("Yoga", "30 minutes daily", HabitCategory.HEALTH)
-            >>> habit.mark_done("2024-10-01")
-            >>> print(habit)
-            Yoga - Target: 30 minutes daily, Category: HEALTH, Streak: 1
-        """
+    def _str_(self):
+        """Returns a string representation of the habit."""
         return f"{self.name} - Target: {self.target}, Category: {self.category.name}, Streak: {self.get_streak()}"
 
 class HabitTracker:
-    """A class to manage multiple habits and generate reports.
+    """
+    A class to manage multiple habits and generate reports.
 
     Attributes:
         habits (list): A list to store instances of Habit.
     
     Methods:
-        __init__(): Initializes a new habit tracker.
+        _init_(): Initializes a new habit tracker.
         add_habit(habit): Adds a new habit to the tracker.
         generate_habit_report(start_date, end_date): Generates a habit tracking report.
         _parse_date(date_string): Parses a date string to return a date object.
     """
 
-    def __init__(self):
+    def _init_(self):
+        print("Initializing habit tracker")
         self.habits = []
 
     def add_habit(self, habit):
-        """Adds a new habit to the tracker.
+        """
+        Adds a new habit to the tracker.
 
         Args:
             habit (Habit): The habit to add.
-
-        Example:
-            >>> tracker = HabitTracker()
-            >>> habit = Habit("Write", "500 words daily", HabitCategory.PRODUCTIVITY)
-            >>> tracker.add_habit(habit)
-            >>> print(len(tracker.habits))
-            1
         """
+        print(f"Adding habit: {habit.name}")
         self.habits.append(habit)
 
     def generate_habit_report(self, start_date=None, end_date=None):
@@ -204,31 +147,8 @@ class HabitTracker:
 
         Returns:
             str: A string containing the report.
-
-        Example:
-            >>> tracker = HabitTracker()
-            >>> habit = Habit("Cook", "1 new recipe weekly", HabitCategory.PERSONAL)
-            >>> tracker.add_habit(habit)
-            >>> habit.mark_done("2024-10-01")
-            >>> report = tracker.generate_habit_report("2024-10-01", "2024-10-02")
-            >>> print(report)
-            Habit Tracking Report
-            =====================
-            
-            Date Range: 2024-10-01 to 2024-10-02
-            
-            Habits Summary:
-              Cook (PERSONAL):
-                Target: 1 new recipe weekly
-                Completion Rate: 100.00% (1/2 days)
-                Current Streak: 1 days
-                Reminder Set: No
-            
-            Detailed Progress:
-              Cook:
-                2024-10-01: Completed
-                2024-10-02: Not Completed
         """
+        print(f"Generating habit report between {start_date} and {end_date}")
         report = "Habit Tracking Report\n"
         report += "=====================\n\n"
 
@@ -267,15 +187,14 @@ class HabitTracker:
 
         Returns:
             datetime.date: The parsed date object.
-
-        Example:
-            >>> tracker = HabitTracker()
-            >>> date = tracker._parse_date("2024-10-01")
-            >>> print(date)
-            2024-10-01
         """
         return datetime.datetime.strptime(date_string, "%Y-%m-%d").date() if date_string else None
     
+class HabitFileManager:
+    def _init_(self):
+        print("Initializing habit file manager")
+        self.habits = []
+
     def save_to_json(self, filename):
         """
         Saves the habit data to a JSON file.
@@ -285,15 +204,8 @@ class HabitTracker:
 
         Raises:
             IOError: If there's an error writing to the file.
-
-        Example:
-            >>> tracker = HabitTracker()
-            >>> habit = Habit("Exercise", "30 minutes daily", HabitCategory.HEALTH)
-            >>> tracker.add_habit(habit)
-            >>> habit.mark_done("2023-05-01")
-            >>> tracker.save_to_json("habits.json")
-            # This will create a file 'habits.json' with the habit data
         """
+        print(f"Saving habits to JSON file: {filename}")
         data = []
         for habit in self.habits:
             habit_data = {
@@ -308,7 +220,9 @@ class HabitTracker:
         try:
             with open(filename, 'w') as f:
                 json.dump(data, f, indent=2)
+            print(f"Habits successfully saved to {filename}")
         except IOError as e:
+            print(f"Error saving to JSON file: {e}")
             raise IOError(f"Error saving to JSON file: {e}")
 
     def load_from_json(self, filename):
@@ -321,17 +235,14 @@ class HabitTracker:
         Raises:
             IOError: If there's an error reading from the file.
             ValueError: If the JSON data is invalid.
-
-        Example:
-            >>> tracker = HabitTracker()
-            >>> tracker.load_from_json("habits.json")
-            >>> print(tracker.generate_habit_report())
-            # This will load the habits from 'habits.json' and print a report
         """
+        print(f"Loading habits from JSON file: {filename}")
         try:
             with open(filename, 'r') as f:
                 data = json.load(f)
+            print(f"Habits successfully loaded from {filename}")
         except IOError as e:
+            print(f"Error loading from JSON file: {e}")
             raise IOError(f"Error loading from JSON file: {e}")
 
         self.habits = []
@@ -350,15 +261,8 @@ class HabitTracker:
 
         Raises:
             IOError: If there's an error writing to the file.
-
-        Example:
-            >>> tracker = HabitTracker()
-            >>> habit = Habit("Read", "1 chapter daily", HabitCategory.LEARNING)
-            >>> tracker.add_habit(habit)
-            >>> habit.mark_done("2023-05-01")
-            >>> tracker.save_to_csv("habits.csv")
-            # This will create a file 'habits.csv' with the habit data
         """
+        print(f"Saving habits to CSV file: {filename}")
         try:
             with open(filename, 'w', newline='') as f:
                 writer = csv.writer(f)
@@ -366,7 +270,9 @@ class HabitTracker:
                 for habit in self.habits:
                     history_str = ';'.join([f"{date}:{done}" for date, done in habit.history.items()])
                     writer.writerow([habit.name, habit.target, habit.category.name, history_str, habit.reminder_set])
+            print(f"Habits successfully saved to {filename}")
         except IOError as e:
+            print(f"Error saving to CSV file: {e}")
             raise IOError(f"Error saving to CSV file: {e}")
 
     def load_from_csv(self, filename):
@@ -379,17 +285,12 @@ class HabitTracker:
         Raises:
             IOError: If there's an error reading from the file.
             ValueError: If the CSV data is invalid.
-
-        Example:
-            >>> tracker = HabitTracker()
-            >>> tracker.load_from_csv("habits.csv")
-            >>> print(tracker.generate_habit_report())
-            # This will load the habits from 'habits.csv' and print a report
         """
+        print(f"Loading habits from CSV file: {filename}")
         try:
             with open(filename, 'r', newline='') as f:
                 reader = csv.reader(f)
-                next(reader)
+                next(reader)  # Skip header row
                 self.habits = []
                 for row in reader:
                     name, target, category, history_str, reminder_set = row
@@ -399,7 +300,64 @@ class HabitTracker:
                                      for date, done in [date_done.split(':')]}
                     habit.reminder_set = reminder_set == 'True'
                     self.habits.append(habit)
+            print(f"Habits successfully loaded from {filename}")
         except IOError as e:
+            print(f"Error loading from CSV file: {e}")
             raise IOError(f"Error loading from CSV file: {e}")
         except (ValueError, IndexError) as e:
+            print(f"Invalid CSV data: {e}")
             raise ValueError(f"Invalid CSV data: {e}")
+
+    def habit_file(self, habit, format='json', filename='habits.json', overwrite=False, merge=False):
+        """
+        Add or update a habit in the file in the specified format.
+
+        Args:
+            habit (Habit): The habit to be added.
+            format (str, optional): The file format to use. Defaults to 'json'.
+            filename (str, optional): The file name. Defaults to 'habits.json'.
+            overwrite (bool, optional): Whether to replace an existing habit. Defaults to False.
+            merge (bool, optional): Whether to merge with an existing habit. Defaults to False.
+
+        Raises:
+            ValueError: If the format is not recognized.
+        """
+        print(f"Handling habit file operation with format: {format}, filename: {filename}")
+        if format not in ['json', 'csv']:
+            raise ValueError("Unrecognized format. Please use 'json' or 'csv'.")
+
+        if format == 'json':
+            try:
+                self.load_from_json(filename)
+            except FileNotFoundError:
+                print(f"File {filename} not found, starting with an empty habit list.")
+        elif format == 'csv':
+            try:
+                self.load_from_csv(filename)
+            except FileNotFoundError:
+                print(f"File {filename} not found, starting with an empty habit list.")
+
+        existing_habit = next((h for h in self.habits if h.name == habit.name), None)
+
+        if existing_habit:
+            print(f"Habit '{habit.name}' found, updating...")
+            if overwrite:
+                existing_habit.target = habit.target
+                existing_habit.category = habit.category
+                existing_habit.history = habit.history
+                existing_habit.reminder_set = habit.reminder_set
+                print(f"Habit '{habit.name}' updated with overwrite.")
+            elif merge:
+                existing_habit.history.update(habit.history)
+                existing_habit.reminder_set = habit.reminder_set
+                print(f"Habit '{habit.name}' updated with merge.")
+            else:
+                raise ValueError("Habit already exists. Use overwrite or merge to update.")
+        else:
+            print(f"Adding new habit '{habit.name}' to the list.")
+            self.habits.append(habit)
+
+        if format == 'json':
+            self.save_to_json(filename)
+        elif format == 'csv':
+            self.save_to_csv(filename)
