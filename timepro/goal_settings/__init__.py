@@ -1,1 +1,1 @@
-from . import GoalStatus, GoalPriority, Goal, Milestone, GoalTracker, GoalFileManager
+from .goal_settings import GoalStatus, GoalPriority, Goal, Milestone, GoalTracker, GoalFileManager
