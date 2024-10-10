@@ -5,31 +5,31 @@ from .pomodoro_timer import PomodoroTimer
 from .task_management import TaskPriority, TaskStatus, Task, TaskManager, TaskFileManager
 from .time_analysis import TimeCategory, TimeEntry, TimeAnalyzer, TimeFileManager
 
-_version_ = "0.1.0"
+__version__ = "0.1.0"
 
-_all_ = [
+__all__ = [
     "DeadlineStatus",
     "DeadlinePriority",
-    "Deadline",
+    "Deadline",
     "DeadlineTracker",
     "DeadlineFileManager",
-    "GoalStatus",
+    "GoalStatus",
     "GoalPriority",
     "Goal",
-    "Milestone",
+    "Milestone",
     "GoalTracker",
     "GoalFileManager",
-    "HabitCategory",
+    "HabitCategory",
     "Habit",
     "HabitTracker",
-    "PomodoroTimer",
+    "PomodoroTimer",
     "TaskPriority",
     "TaskStatus",
-    "Task",
+    "Task",
     "TaskManager",
     "TaskFileManager",
-    "TimeCategory",
+    "TimeCategory",
     "TimeEntry",
     "TimeAnalyzer",
-    "TimeFileManager",
+    "TimeFileManager",
 ]
