@@ -12,7 +12,7 @@ setup(
   name='timepro',
   version='0.0.1',
   description='A package for managing time effectively, including Pomodoro Timer, Task Manager, Deadline Tracker, and more.',
-  long_description=open('README.md').read(),
+  long_description=open('README.md', encoding='utf-8').read(),
   url='https://github.com/Faderu/TimePRO',  
   author='KELOMPOK 7 ALGORITMA A',
   author_email='fadhilbosque@gmail.com',
