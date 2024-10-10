@@ -26,15 +26,15 @@ pip install timepro
 
 Here's a quick example of how to use TimePRO:
 
-python
+```python
 from timepro.pomodoro_timer import PomodoroTimer
 
-# Create a PomodoroTimer instance
+# Create a Pomodoro Timer Instance
 timer = PomodoroTimer()
 
-# Start a Pomodoro session
+# Start a Pomodoro Session
 timer.start_session()
-
+```
 
 ### 📄 License
 
