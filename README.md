@@ -1,6 +1,6 @@
 # TimePRO 🕒
 
-![TimePRO Logo](timepro_logo.jng)
+![TimePRO Logo](timepro_logo.png.jpg)
 
 ## Task Package Library for Algorithm and Programming
 
