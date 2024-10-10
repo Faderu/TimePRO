@@ -18,9 +18,9 @@ TimePRO is a powerful software package designed to help users manage their time 
 
 To install TimePRO, run the following command in your terminal:
 
-bash
+```bash
 pip install timepro
-
+```
 
 ### 📘 Usage
 
