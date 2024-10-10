@@ -16,6 +16,24 @@ Tugas Package Library Algoritma dan Pemrograman
 7. [License](#license)  
 
 ## Introduction  
+=======
+# Habit 
+ Module
+
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Features](#features)
+3. [Installation](#installation)
+4. [Usage](#usage)
+   - [HabitCategory](#habitcategory)
+   - [Habit](#habit)
+   - [HabitTracker](#habittracker)
+5. [Examples](#examples)
+6. [Contributing](#contributing)
+7. [License](#license)
+
+## Introduction
+>>>>>>> main
 
 The Habit Tracker Module is a Python tool designed to help users track and maintain their habits. It provides classes and methods for creating habits, tracking progress, setting reminders, and generating reports. This module is ideal for individuals looking to build positive routines, track daily achievements, and analyze their habit progress.
 
@@ -134,4 +152,6 @@ Contributions to the Habit Tracker Module are welcome! Please feel free to submi
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-
+=======
+This project is licensed under the MIT License. See the LICENSE file for details.
+>>>>>>> main
