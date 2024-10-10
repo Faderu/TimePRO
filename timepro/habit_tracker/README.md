@@ -1,6 +1,3 @@
-# TimePRO
-Tugas Package Library Algoritma dan Pemrograman
-
 # Habit 
  Module
 
