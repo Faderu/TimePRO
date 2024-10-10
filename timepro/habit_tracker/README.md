@@ -1,9 +1,9 @@
 # TimePRO  
 Tugas Package Library Algoritma dan Pemrograman  
 
-# Habit Module
+# Habit Module  
 
-## Table of Contents
+## Table of Contents  
 1. [Introduction](#introduction)  
 2. [Features](#features)  
 3. [Installation](#installation)  
@@ -133,4 +133,5 @@ Contributions to the Habit Tracker Module are welcome! Please feel free to submi
 ## License  
 
 This project is licensed under the MIT License. See the LICENSE file for details.
+
 
