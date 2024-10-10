@@ -26,7 +26,7 @@ pip install timepro
 
 Here's a quick example of how to use TimePRO:
 
-```python
+```bash
 from timepro.pomodoro_timer import PomodoroTimer
 
 # Create a Pomodoro Timer Instance
