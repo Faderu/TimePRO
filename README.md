@@ -18,23 +18,25 @@ TimePRO is a powerful software package designed to help users manage their time 
 
 To install TimePRO, run the following command in your terminal:
 
-```bash
+`
 pip install timepro
-```
+`
 
 ### 📘 Usage
 
 Here's a quick example of how to use TimePRO:
 
-```bash
+`
 from timepro.pomodoro_timer import PomodoroTimer
-
-# Create a Pomodoro Timer Instance
+`
+#### Create a Pomodoro Timer Instance
+`
 timer = PomodoroTimer()
-
-# Start a Pomodoro Session
+`
+#### Start a Pomodoro Session
+`
 timer.start_session()
-```
+`
 
 ### 📄 License
 
