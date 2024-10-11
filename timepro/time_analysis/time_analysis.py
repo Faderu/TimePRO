@@ -44,7 +44,6 @@ class TimeEntry:
             description (str, optional): A description of the time entry. Defaults to "".
             
         """
-        print(f"Initializing TimeEntry")
         self.start_time = self._parse_time(start_time)
         self.end_time = self._parse_time(end_time)
         self.category = category
@@ -66,7 +65,6 @@ class TimeEntry:
             ValueError: If the time format is invalid.
             TypeError: If the time input is not a datetime object or a string.
         """
-        print(f"Parsing time input: {time_input}")
         if isinstance(time_input, datetime):
             return time_input
         elif isinstance(time_input, str):
@@ -103,7 +101,7 @@ class TimeEntry:
 
         Raises:
             ValueError: If the tag is None.
- """
+        """
         print(f"Adding tag: {tag}")
         if tag is None:
             raise ValueError("Tag cannot be None")
@@ -125,7 +123,6 @@ class TimeEntry:
         self.tags.discard(tag.lower())
 
     def __str__(self):
-        print("Converting to string")
         return f"{self.category.name}: {self.start_time.strftime('%Y-%m-%d %H:%M')} - {self.end_time.strftime('%H:%M')} ({self.duration})"
 
 class TimeAnalyzer:
@@ -137,7 +134,6 @@ class TimeAnalyzer:
     """
 
     def __init__(self):
-        print("Initializing TimeAnalyzer object")
         self.entries = []
 
     def add_entry(self, start_time, end_time, category, description=""):
@@ -216,7 +212,6 @@ class TimeAnalyzer:
             ValueError: If the time format is invalid.
             TypeError: If the time input is not a datetime object or a string.
         """
-        print(f"Parsing time input: {time_input}")
         if isinstance(time_input, datetime):
             return time_input
         elif isinstance(time_input, str):
@@ -254,26 +249,8 @@ class TimeAnalyzer:
                (not end_date or entry.end_time <= end_date):
                 total_time[entry.category] += entry.duration
         return dict(total_time)
-
-    def get_daily_summary(self, date=None):
-        """
-        Get a summary of time usage for a specific date.
-
-        Args:
-            date (datetime or str, optional): The date to summarize. Defaults to None.
-
-        Returns:
-            dict: A dictionary with categories as keys and total times as values.
-        """
-        print("Calculating daily summary")
-        date = self._parse_time_input(date) if date else datetime.now().date()
-        daily_summary = defaultdict(timedelta)
-        for entry in self.entries:
-            if entry.start_time.date() == date:
-                daily_summary[entry.category] += entry.duration
-        return dict(daily_summary)
-
-    def get_productivity_score(self, productive_categories, date=None):
+        
+    def get_productivity_score(self, productive_categories, date):
         """
         Calculate a productivity score based on time spent in productive categories.
 
@@ -284,6 +261,7 @@ class TimeAnalyzer:
         Returns:
             float: The productivity score.
         """
+        print("Calculating productivity score")
         date = self._parse_time_input(date).date() if date else None
         total_time = timedelta()
         productive_time = timedelta()
@@ -309,6 +287,7 @@ class TimeAnalyzer:
         Returns:
             list: A list of TimeEntry objects.
         """
+        print("Listing entries")
         if filter_by_category:
             return [entry for entry in self.entries if entry.category == filter_by_category]
         return self.entries
@@ -324,6 +303,7 @@ class TimeAnalyzer:
         Returns:
             list: A list of TimeEntry objects.
         """
+        print("Filtering entries by date range")
         start_date = self._parse_time_input(start_date) if start_date else datetime.min
         end_date = self._parse_time_input(end_date) if end_date else datetime.max
         return [entry for entry in self.entries if start_date <= entry.start_time <= end_date]
@@ -338,6 +318,7 @@ class TimeAnalyzer:
         Returns:
             list: A list of TimeEntry objects.
         """
+        print("Filtering entries by tag")
         return [entry for entry in self.entries if tag.lower() in entry.tags]
 
     def generate_time_report(self, start_date=None, end_date=None):
