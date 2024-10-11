@@ -1,5 +1,4 @@
-# Habit 
- Module
+# Habit Module
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -37,25 +36,25 @@ To use the Habit Tracker Module, simply copy the habit_tracker.py file into your
 
 The HabitCategory class defines different categories of habits. You can assign a habit to one of these categories:
 
-python
+```python
 from habit_tracker import HabitCategory
 
 category = HabitCategory.HEALTH
 print(category.name)  # Outputs: HEALTH
 print(category.value)  # Outputs: 1
-
+```
 
 ### Habit
 
 The Habit class allows you to create and track individual habits. It supports setting targets, tracking completion history, and managing reminders.
 
-python
+```python
 from habit_tracker import Habit, HabitCategory
 
 habit = Habit("Exercise", "30 minutes daily", HabitCategory.HEALTH)
 habit.mark_done("2024-10-01")
 print(habit.get_streak())  # Outputs: 1
-
+```
 
 #### Key Methods
 
@@ -68,7 +67,7 @@ print(habit.get_streak())  # Outputs: 1
 
 The HabitTracker class manages a collection of habits and provides methods for tracking progress and generating reports.
 
-python
+```python
 from habit_tracker import HabitTracker, Habit, HabitCategory
 
 tracker = HabitTracker()
@@ -77,7 +76,7 @@ tracker.add_habit(habit)
 
 # Generate a report
 print(tracker.generate_habit_report("2024-10-01", "2024-10-07"))
-
+```
 
 #### Key Methods
 
@@ -92,7 +91,7 @@ print(tracker.generate_habit_report("2024-10-01", "2024-10-07"))
 
 ### Creating and Tracking Habits
 
-python
+```python
 from habit_tracker import HabitTracker, Habit, HabitCategory
 
 tracker = HabitTracker()
@@ -106,23 +105,23 @@ habit.mark_done("2024-10-01")
 
 # Get the habit streak
 print(habit.get_streak())  # Outputs: 1
-
+```
 
 ### Generating Reports
 
-python
+```python
 report = tracker.generate_habit_report("2024-10-01", "2024-10-07")
 print(report)
-
+```
 
 ### Saving and Loading Data
 
-python
+```python
 tracker.save_to_json("habits.json")
 tracker.load_from_json("habits.json")
 tracker.save_to_csv("habits.csv")
 tracker.load_from_csv("habits.csv")
-
+```
 
 ## Contributing
 
