@@ -151,6 +151,7 @@ print(report)
 
 The `TimeFileManager` class manages time entry data in JSON and CSV formats.
 
+<<<<<<< HEAD
 **Features In TimeFileManager Class**
 1. **Saving Data:**
 - `save_to_json(file_path)`: Saves the time entries to a JSON file.
@@ -188,3 +189,6 @@ manager.file_time_entry(entry, format="json", filename="time_entries.json", over
 ```
 
 ---
+=======
+This project is licensed under the MIT License. See the LICENSE file for details.
+>>>>>>> 342eb823c4e725da0bc11854648a12231076e7de
