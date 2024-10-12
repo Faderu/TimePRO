@@ -4,6 +4,7 @@ Habit Tracker Module
 This module provides classes for tracking habits, managing their progress, and setting reminders.
 
 Classes:
+
     HabitCategory: An enumeration of possible habit categories (e.g., Health, Learning, Productivity).
     Habit: Represents a single habit, including attributes like name, target, category, history, and reminder settings.
     HabitTracker: Manages a collection of habits, allowing users to add, track, and report on their habits over time.
@@ -399,6 +400,123 @@ class HabitTracker:
                                      for date, done in [date_done.split(':')]}
                     habit.reminder_set = reminder_set == 'True'
                     self.habits.append(habit)
+        except IOError as e:
+            raise IOError(f"Error loading from CSV file: {e}")
+        except (ValueError, IndexError) as e:
+            raise ValueError(f"Invalid CSV data: {e}")
+        
+class HabitFileManager:
+    """Class for managing saving and loading of habits to and from JSON and CSV files."""
+    
+    @staticmethod
+    def save_to_json(habits, filename):
+        """
+        Saves the habit data to a JSON file.
+
+        Args:
+            habits (list): List of Habit objects to save.
+            filename (str): The name of the file to save the data to.
+
+        Raises:
+            IOError: If there's an error writing to the file.
+        """
+        data = []
+        for habit in habits:
+            habit_data = {
+                "name": habit.name,
+                "target": habit.target,
+                "category": habit.category.name,
+                "history": {str(date): done for date, done in habit.history.items()},
+                "reminder_set": habit.reminder_set
+            }
+            data.append(habit_data)
+
+        try:
+            with open(filename, 'w') as f:
+                json.dump(data, f, indent=2)
+        except IOError as e:
+            raise IOError(f"Error saving to JSON file: {e}")
+
+    @staticmethod
+    def load_from_json(filename):
+        """
+        Loads habit data from a JSON file.
+
+        Args:
+            filename (str): The name of the file to load the data from.
+
+        Raises:
+            IOError: If there's an error reading from the file.
+            ValueError: If the JSON data is invalid.
+
+        Returns:
+            list: List of Habit objects loaded from the file.
+        """
+        try:
+            with open(filename, 'r') as f:
+                data = json.load(f)
+        except IOError as e:
+            raise IOError(f"Error loading from JSON file: {e}")
+
+        habits = []
+        for habit_data in data:
+            habit = Habit(habit_data['name'], habit_data['target'], HabitCategory[habit_data['category']])
+            habit.history = {datetime.datetime.strptime(date, "%Y-%m-%d").date(): done for date, done in habit_data['history'].items()}
+            habit.reminder_set = habit_data['reminder_set']
+            habits.append(habit)
+        return habits
+
+    @staticmethod
+    def save_to_csv(habits, filename):
+        """
+        Saves the habit data to a CSV file.
+
+        Args:
+            habits (list): List of Habit objects to save.
+            filename (str): The name of the file to save the data to.
+
+        Raises:
+            IOError: If there's an error writing to the file.
+        """
+        try:
+            with open(filename, 'w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow(['Name', 'Target', 'Category', 'History', 'Reminder Set'])
+                for habit in habits:
+                    history_str = ';'.join([f"{date}:{done}" for date, done in habit.history.items()])
+                    writer.writerow([habit.name, habit.target, habit.category.name, history_str, habit.reminder_set])
+        except IOError as e:
+            raise IOError(f"Error saving to CSV file: {e}")
+
+    @staticmethod
+    def load_from_csv(filename):
+        """
+        Loads habit data from a CSV file.
+
+        Args:
+            filename (str): The name of the file to load the data from.
+
+        Raises:
+            IOError: If there's an error reading from the file.
+            ValueError: If the CSV data is invalid.
+
+        Returns:
+            list: List of Habit objects loaded from the file.
+        """
+        try:
+            with open(filename, 'r', newline='') as f:
+                reader = csv.reader(f)
+                next(reader)  # Skip header
+                habits = []
+                for row in reader:
+                    name, target, category, history_str, reminder_set = row
+                    habit = Habit(name, target, HabitCategory[category])
+                    habit.history = {datetime.datetime.strptime(date, "%Y-%m-%d").date(): done == 'True'
+                                     for date_done in history_str.split(';')
+                                     for date, done in [date_done.split(':')]}
+                    habit.reminder_set = reminder_set == 'True'
+                    habits.append(habit)
+                return habits
         except IOError as e:
             raise IOError(f"Error loading from CSV file: {e}")
         except (ValueError, IndexError) as e:
