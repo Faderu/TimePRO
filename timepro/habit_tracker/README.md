@@ -1,132 +1,240 @@
-# Habit Module
+# Habit Tracker Module
 
-## Table of Contents
+---
+
+### Table of Contents
 1. [Introduction](#introduction)
 2. [Features](#features)
-3. [Installation](#installation)
-4. [Usage](#usage)
-   - [HabitCategory](#habitcategory)
-   - [Habit](#habit)
-   - [HabitTracker](#habittracker)
-5. [Examples](#examples)
-6. [Contributing](#contributing)
-7. [License](#license)
+3. [Class Overview](#class-overview)
+4. [Detailed And Usage](#detailed-class-descriptions-and-usage)
 
-## Introduction
+---
 
-The Habit Tracker Module is a Python tool designed to help users track and maintain their habits. It provides classes and methods for creating habits, tracking progress, setting reminders, and generating reports. This module is ideal for individuals looking to build positive routines, track daily achievements, and analyze their habit progress.
+### Introduction
 
-## Features
+The Habit Tracker Module is a powerful tool designed to help users create, manage, and track their habits effectively. It allows users to set targets, categorize habits, monitor progress, and generate comprehensive reports. With the addition of file management features, users can save and load their habit data from JSON and CSV files, making it easy to maintain records and share habit data across different platforms.
 
-- Create and manage habits with targets and categories
-- Track habit progress over time
-- Mark habits as complete for specific dates
-- Set reminders for habits
-- Get habit streaks and completion rates
-- Generate habit tracking reports
-- Save and load habit data in JSON and CSV formats
+---
 
-## Installation
+### Features
 
-To use the Habit Tracker Module, simply copy the habit_tracker.py file into your project directory. The module uses only built-in Python libraries, so no additional dependencies are required.
+- **Create and Manage Habits:** Add, update, and delete habits with descriptions, targets, categories, and frequencies.
+- **Progress Tracking:** Monitor the progress of each habit based on completion history.
+- **Streak Calculation:** Track the number of consecutive days a habit has been maintained.
+- **Reminder System:** Set and manage reminders for habits to encourage consistency.
+- **Categorization:** Group habits into categories for better organization.
+- **Reporting:** Generate detailed reports on habit performance and progress.
+- **File Management:** Save and load habit data to/from JSON and CSV formats.
+- **Filtering and Sorting:** Retrieve habits by category, status, or upcoming due dates.
 
-## Usage
+---
 
-### HabitCategory
+### Class Overview
 
-The HabitCategory class defines different categories of habits. You can assign a habit to one of these categories:
+1. **Habit**
+   - Represents a single habit with attributes such as `title`, `category`, `frequency`, `target`, `progress`, `reminder`, and `created_date`.
+   - Methods include:
+     - Setting and removing targets
+     - Updating progress
+     - Getting habit status
+     - Marking habits as complete for specific dates
 
-```python
-from habit_tracker import HabitCategory
+2. **HabitCategory**
+   - Defines categories for habits, such as Health, Productivity, etc.
+   - Attributes include `name` and `description`.
 
-category = HabitCategory.HEALTH
-print(category.name)  # Outputs: HEALTH
-print(category.value)  # Outputs: 1
-```
+3. **HabitReminder**
+   - Manages reminders for habits.
+   - Features include activating/deactivating reminders and updating reminder times and frequencies.
 
-### Habit
+4. **HabitTracker**
+   - Manages a collection of `Habit` objects.
+   - Methods include:
+     - Adding/removing habits
+     - Retrieving habits by category
+     - Checking habit streaks and progress
+     - Generating habit reports
+     - Setting reminders
+     - Calculating completion rates and average progress
 
-The Habit class allows you to create and track individual habits. It supports setting targets, tracking completion history, and managing reminders.
+5. **HabitFileManager**
+   - Manages loading and saving of habit data to/from JSON and CSV files.
+   - Methods include:
+     - Saving and loading habits data in JSON and CSV formats
+     - Adding or updating individual habits in files
 
-```python
-from habit_tracker import Habit, HabitCategory
+---
 
-habit = Habit("Exercise", "30 minutes daily", HabitCategory.HEALTH)
-habit.mark_done("2024-10-01")
-print(habit.get_streak())  # Outputs: 1
-```
+### Detailed Class Descriptions and Usage
 
-#### Key Methods
+#### Habit
 
-- mark_done(date_input="today"): Marks the habit as completed for the specified date.
-- check_progress(start_date, end_date): Returns the number of completed and total days in the given range.
-- get_streak(): Returns the current streak of consecutive days the habit has been completed.
-- set_reminder(): Sets a reminder for the habit.
+The `Habit` class represents individual habits that users want to track and maintain.
 
-### HabitTracker
+**Features in Habit Class:**
+1. **Habit Attributes:**
+   - `title` (str): The title of the habit.
+   - `category` (HabitCategory): The category of the habit.
+   - `frequency` (str): How often the habit should be performed (e.g., daily, weekly).
+   - `target` (int): The target number of completions.
+   - `progress` (int): The number of times the habit has been completed.
+   - `reminder` (bool): Whether a reminder is set for this habit.
+   - `created_date` (date): The date the habit was created.
 
-The HabitTracker class manages a collection of habits and provides methods for tracking progress and generating reports.
+2. **Setting and Removing Targets:**
+   - `set_target(target: int)`: Sets a new target for the habit.
+   - `remove_target()`: Removes the current target.
 
-```python
-from habit_tracker import HabitTracker, Habit, HabitCategory
+3. **Updating Progress:**
+   - `update_progress(value: int)`: Updates the progress of the habit.
 
-tracker = HabitTracker()
-habit = Habit("Read", "1 chapter daily", HabitCategory.LEARNING)
-tracker.add_habit(habit)
+4. **Checking Status:**
+   - `get_status() -> str`: Returns the current status of the habit (e.g., not started, in progress, completed).
 
-# Generate a report
-print(tracker.generate_habit_report("2024-10-01", "2024-10-07"))
-```
+**Usage For Habir Class:**
+1. **Create a new habit**
+   ```python
+   from timepro.habit_tracker import Habit, HabitCategory
+   
+   habit = Habit("Daily Exercise", "30 minutes of exercise daily", HabitCategory.HEALTH)
+   ```
 
-#### Key Methods
+2. **Mark the habit as done**
+   ```python
+   habit.mark_done("2024-03-15")
+   ```
 
-- add_habit(habit): Adds a new habit to the tracker.
-- generate_habit_report(start_date, end_date): Generates a detailed report of habits over the specified date range.
-- save_to_json(filename): Saves the habit data to a JSON file.
-- load_from_json(filename): Loads habit data from a JSON file.
-- save_to_csv(filename): Saves the habit data to a CSV file.
-- load_from_csv(filename): Loads habit data from a CSV file.
+3. **Check progress of the habit**
+   ```python
+   completed, total = habit.check_progress("2024-03-01", "2024-03-31")
+   print(f"Completed {completed} out of {total} days")
+   ```
 
-## Examples
+4. **Set a reminder for the habit**
+   ```python
+   habit.set_reminder()
+   ```
 
-### Creating and Tracking Habits
+5. **Get the current streak**
+   ```python
+   streak = habit.get_streak()
+   print(f"Current streak: {streak} days")
+   ```
 
-```python
-from habit_tracker import HabitTracker, Habit, HabitCategory
+6. **Print habit information**
+   ```python
+   print(habit)
 
-tracker = HabitTracker()
+---
 
-# Add a new habit
-habit = Habit("Exercise", "30 minutes daily", HabitCategory.HEALTH)
-tracker.add_habit(habit)
+#### HabitTracker
 
-# Mark the habit as done
-habit.mark_done("2024-10-01")
+The `HabitTracker` class manages a collection of habits and provides methods for tracking progress and generating reports.
 
-# Get the habit streak
-print(habit.get_streak())  # Outputs: 1
-```
+**Features in HabitTracker Class:**
+1. **HabitTracker Attributes:**
+   - `habits` (list): A list of `Habit` objects being tracked.
 
-### Generating Reports
+2. **Adding and Removing Habits:**
+   - `add_habit(habit: Habit)`: Adds a new habit to the tracker.
+   - `remove_habit(habit: Habit)`: Removes a habit from the tracker.
 
-```python
-report = tracker.generate_habit_report("2024-10-01", "2024-10-07")
-print(report)
-```
+3. **Grouping Habits by Category:**
+   - `get_habits_by_category(category: HabitCategory) -> list`: Retrieves all habits in a specific category.
 
-### Saving and Loading Data
+4. **Tracking Progress and Streaks:**
+   - `get_habit_streak(habit: Habit) -> int`: Returns the current streak for a habit.
+   - `check_progress(habit: Habit, start_date: str, end_date: str) -> tuple`: Checks the progress of a habit over a date range.
 
-```python
-tracker.save_to_json("habits.json")
-tracker.load_from_json("habits.json")
-tracker.save_to_csv("habits.csv")
-tracker.load_from_csv("habits.csv")
-```
+5. **Checking Overdue Habits:**
+   - `get_overdue_habits() -> list`: Retrieves all habits that are past their due date.
 
-## Contributing
+6. **Managing Habit Reminders:**
+   - `set_reminder(habit: Habit)`: Sets a reminder for a specific habit.
 
-Contributions to the Habit Tracker Module are welcome! Please feel free to submit pull requests, create issues, or suggest new features to improve the module.
+7. **Generating Habit Reports:**
+   - `generate_habit_report(start_date: str, end_date: str) -> str`: Generates a comprehensive report on all tracked habits.
 
-## License
+8. **Calculating Habit Statistics:**
+   - `get_habit_completion_rate(habit: Habit) -> float`: Calculates the completion rate for a specific habit.
+   - `get_average_habit_progress() -> float`: Calculates the average progress across all habits.
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+9. **Displaying Upcoming Habits:**
+   - `get_upcoming_habits(days: int = 7) -> list`: Retrieves habits due within a specified number of days.
+
+**Usage For HabitTracker Class:**
+1. **Create a new habit tracker**
+   ```python
+   from timepro.habit_tracker import HabitTracker
+   
+   tracker = HabitTracker()
+   ```
+
+2. **Add a habit to the tracker**
+   ```python
+   tracker.add_habit(habit)
+   ```
+
+3. **Generate a habit report**
+   ```python
+   report = tracker.generate_habit_report("2024-03-01", "2024-03-31")
+   print(report)
+   ```
+
+#### HabitFileManager
+
+The `HabitFileManager` class manages habit data in JSON and CSV formats.
+
+**Features in HabitFileManager Class:**
+1. **Attributes:**
+   - `habits` (list): A list of `Habit` objects.
+
+2. **Saving Data to JSON:**
+   - `save_to_json(filename: str)`: Saves the list of habits to a JSON file.
+
+3. **Loading Data from JSON:**
+   - `load_from_json(filename: str)`: Loads the list of habits from a JSON file.
+
+4. **Saving Data to CSV:**
+   - `save_to_csv(filename: str)`: Saves the list of habits to a CSV file.
+
+5. **Loading Data from CSV:**
+   - `load_from_csv(filename: str)`: Loads the list of habits from a CSV file.
+
+6. **Adding or Updating Habits:**
+   - `habit_file(habit: Habit, format='json', filename='habits.json', overwrite=False, merge=False)`: Adds or updates a habit in the file.
+
+**Usage For HabitFileManager Class:**
+1. **Create a new habit file manager**
+   ```python
+   from timepro.habit_tracker import HabitFileManager
+   
+   file_manager = HabitFileManager()
+   ```
+
+2. **Save habits to a JSON file**
+   ```python
+   file_manager.habits = [habit]
+   file_manager.save_to_json("habits.json")
+   ```
+
+3. **Load habits from a JSON file**
+   ```python
+   file_manager.load_from_json("habits.json")
+   ```
+
+4. **Save habits to a CSV file**
+   ```python
+   file_manager.save_to_csv("habits.csv")
+   ```
+
+5. **Load habits from a CSV file**
+   ```python
+   file_manager.load_from_csv("habits.csv")
+   ```
+
+6. **Add or update a habit in a file**
+   ```python
+   new_habit = Habit("Read Books", "Read for 30 minutes daily", HabitCategory.LEARNING)
+   file_manager.habit_file(new_habit, format='json', filename='habits.json', overwrite=True)
+---
