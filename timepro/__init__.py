@@ -1,35 +1,36 @@
 from .deadline_tracker import DeadlineStatus, DeadlinePriority, Deadline, DeadlineTracker, DeadlineFileManager
 from .goal_settings import GoalStatus, GoalPriority, Goal, Milestone, GoalTracker, GoalFileManager
-from .habit_tracker import HabitCategory, Habit, HabitTracker
+from .habit_tracker import HabitCategory, Habit, HabitTracker, HabitFileManager
 from .pomodoro_timer import PomodoroTimer
 from .task_management import TaskPriority, TaskStatus, Task, TaskManager, TaskFileManager
 from .time_analysis import TimeCategory, TimeEntry, TimeAnalyzer, TimeFileManager
 
-_version_ = "0.1.0"
+__version__ = "0.1.0"
 
-_all_ = [
+__all__ = [
     "DeadlineStatus",
     "DeadlinePriority",
-    "Deadline",
+    "Deadline",
     "DeadlineTracker",
     "DeadlineFileManager",
-    "GoalStatus",
+    "GoalStatus",
     "GoalPriority",
     "Goal",
-    "Milestone",
+    "Milestone",
     "GoalTracker",
     "GoalFileManager",
-    "HabitCategory",
+    "HabitCategory",
     "Habit",
     "HabitTracker",
-    "PomodoroTimer",
+    "HabitFileManager",
+    "PomodoroTimer",
     "TaskPriority",
     "TaskStatus",
-    "Task",
+    "Task",
     "TaskManager",
     "TaskFileManager",
-    "TimeCategory",
+    "TimeCategory",
     "TimeEntry",
     "TimeAnalyzer",
-    "TimeFileManager",
+    "TimeFileManager",
 ]
