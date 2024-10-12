@@ -64,6 +64,7 @@ class Task:
         self.status = TaskStatus.WAITING
         self.created_date = datetime.now()
         self.tags = set()
+        print(f"Task created: {self.title}")
 
     def _parse_deadline(self, deadline_date):
         """
@@ -95,6 +96,7 @@ class Task:
         Marks the task as completed.
         """
         self.status = TaskStatus.COMPLETED
+        print(f"Task marked as completed: {self.title}")
 
     def update_status(self, status):
         """
@@ -108,8 +110,9 @@ class Task:
         """
         if isinstance(status, TaskStatus):
             self.status = status
+            print(f"Status updated for task '{self.title}': {status.name}")
         else:
-            raise ValueError("Invalid status. Use TaskStatus enum.")
+            print(f"Invalid status for task '{self.title}'. Use TaskStatus enum.")
 
     def add_tag(self, tag):
         """
@@ -119,6 +122,7 @@ class Task:
             tag (str): The tag to add.
         """
         self.tags.add(tag.lower())
+        print(f"Tag added to task '{self.title}': {tag}")
 
     def remove_tag(self, tag):
         """
@@ -128,6 +132,7 @@ class Task:
             tag (str): The tag to remove.
         """
         self.tags.discard(tag.lower())
+        print(f"Tag removed from task '{self.title}': {tag}")
 
     def is_overdue(self):
         """
@@ -136,8 +141,10 @@ class Task:
         Returns:
             bool: True if the task is overdue, False otherwise.
         """
-        return datetime.now() > self.deadline_date and self.status != TaskStatus.COMPLETED
-
+        is_overdue = datetime.now() > self.deadline_date and self.status != TaskStatus.COMPLETED
+        print(f"Task '{self.title}' overdue status: {is_overdue}")
+        return is_overdue
+    
     def time_remaining(self):
         """
         Calculates the time remaining until the deadline.
@@ -146,7 +153,10 @@ class Task:
             timedelta: The time remaining until the deadline, or None if no deadline is set.
         """
         if self.deadline_date:
-            return self.deadline_date - datetime.now()
+            remaining = self.deadline_date - datetime.now()
+            print(f"Time remaining for task '{self.title}': {remaining}")
+            return remaining
+        print(f"No deadline set for task '{self.title}'")
         return None
 
     def __str__(self):
@@ -169,6 +179,7 @@ class TaskManager:
         Initializes the TaskManager instance with an empty task list.
         """
         self.tasks = []
+        print("TaskManager initialized")
 
     def add_task(self, task):
         """
@@ -182,8 +193,9 @@ class TaskManager:
         """
         if isinstance(task, Task):
             self.tasks.append(task)
+            print(f"Task added: {task.title}")
         else:
-            raise TypeError("Only Task objects can be added.")
+            print("Error: Only Task objects can be added.")
 
     def remove_task(self, title):
         """
@@ -192,7 +204,10 @@ class TaskManager:
         Args:
             title (str): The title of the task to remove.
         """
+        initial_count = len(self.tasks)
         self.tasks = [task for task in self.tasks if task.title != title]
+        removed_count = initial_count - len(self.tasks)
+        print(f"Removed {removed_count} task(s) with title: {title}")
 
     def get_task(self, title):
         """
@@ -204,7 +219,9 @@ class TaskManager:
         Returns:
             Task: The task object if found, None otherwise.
         """
-        return next((task for task in self.tasks if task.title == title), None)
+        task = next((task for task in self.tasks if task.title == title), None)
+        print(f"Retrieved task: {task.title if task else 'None'}")
+        return task
 
     def list_tasks(self, filter_by_status=None):
         """
@@ -217,7 +234,10 @@ class TaskManager:
             list: A list of tasks.
         """
         if filter_by_status:
-            return [task for task in self.tasks if task.status == filter_by_status]
+            filtered_tasks = [task for task in self.tasks if task.status == filter_by_status]
+            print(f"Listed {len(filtered_tasks)} tasks with status: {filter_by_status.name}")
+            return filtered_tasks
+        print(f"Listed all {len(self.tasks)} tasks")
         return self.tasks
     
     def upcoming_tasks(self, days=7):
@@ -230,7 +250,9 @@ class TaskManager:
             list: A list of upcoming tasks.
         """
         future_date = datetime.now() + timedelta(days=days)
-        return [task for task in self.tasks if task.deadline_date <= future_date and task.status != TaskStatus.COMPLETED]
+        upcoming = [task for task in self.tasks if task.deadline_date <= future_date and task.status != TaskStatus.COMPLETED]
+        print(f"Found {len(upcoming)} upcoming tasks in the next {days} days")
+        return upcoming
 
 
     def tasks_by_priority(self, priority):
@@ -242,7 +264,9 @@ class TaskManager:
         Returns:
             list: A list of tasks with the specified priority.
         """
-        return [task for task in self.tasks if task.priority == priority]
+        priority_tasks = [task for task in self.tasks if task.priority == priority]
+        print(f"Found {len(priority_tasks)} tasks with priority: {priority.name}")
+        return priority_tasks
 
     def pending_tasks(self):
         """
@@ -251,7 +275,9 @@ class TaskManager:
         Returns:
             list: A list of tasks that are not completed.
         """
-        return [task for task in self.tasks if task.status != TaskStatus.COMPLETED]
+        pending = [task for task in self.tasks if task.status != TaskStatus.COMPLETED]
+        print(f"Found {len(pending)} pending tasks")
+        return pending
     
     def get_overdue_tasks(self):
         """Gets all overdue tasks.
@@ -259,7 +285,9 @@ class TaskManager:
         Returns:
             list: A list of overdue tasks.
         """
-        return [task for task in self.tasks if task.is_overdue()]
+        overdue = [task for task in self.tasks if task.is_overdue()]
+        print(f"Found {len(overdue)} overdue tasks")
+        return overdue
 
 
     def get_tasks_by_tag(self, tag):
@@ -271,7 +299,9 @@ class TaskManager:
         Returns:
             list: A list of tasks with the specified tag.
         """
-        return [task for task in self.tasks if tag.lower() in task.tags]
+        tagged_tasks = [task for task in self.tasks if tag.lower() in task.tags]
+        print(f"Found {len(tagged_tasks)} tasks with tag: {tag}")
+        return tagged_tasks
 
 
     def generate_task_report(self):
@@ -321,6 +351,7 @@ class TaskFileManager:
             IOError: If there's an error reading from the file.
             ValueError: If the JSON data is invalid.
         """
+        print(f"Saving tasks to JSON file: {file_path}")
         tasks_data = []
         for task in self.tasks:
             task_data = {
@@ -333,9 +364,11 @@ class TaskFileManager:
                 'tags': list(task.tags)
             }
             tasks_data.append(task_data)
+
         try:
             with open(file_path, 'w') as json_file:
                 json.dump(tasks_data, json_file, indent=4)
+            print(f"Successfully saved {len(tasks_data)} tasks to JSON file")
         except IOError as e:
             raise IOError(f"Error saving to JSON file: {e}")
 
@@ -350,10 +383,11 @@ class TaskFileManager:
             IOError: If there's an error reading from the file.
             ValueError: If the JSON data is invalid.
         """
+        print(f"Loading tasks from JSON file: {file_path}")
         try:
             with open(file_path, 'r') as json_file:
                 tasks_data = json.load(json_file)
-        except IOError as e:
+        except (IOError, json.JSONDecodeError) as e:
             raise IOError(f"Error loading from JSON file: {e}")
 
         self.tasks = []
@@ -362,12 +396,13 @@ class TaskFileManager:
                 title=task_data['title'],
                 description=task_data['description'],
                 priority=TaskPriority[task_data['priority']],
-                deadline_date=task_data['deadline_date']
+                deadline_date=datetime.strptime(task_data['deadline_date'], '%Y-%m-%d %H:%M') if task_data['deadline_date'] else None,
             )
             task.status = TaskStatus[task_data['status']]
             task.created_date = datetime.strptime(task_data['created_date'], '%Y-%m-%d %H:%M')
             task.tags = set(task_data['tags'])
             self.tasks.append(task)
+        print(f"Successfully loaded {len(self.tasks)} tasks from JSON file")
 
     def save_tasks_to_csv(self, file_path):
         """
@@ -379,6 +414,7 @@ class TaskFileManager:
         Raises:
             IOError: If there's an error writing to the file.
         """
+        print(f"Saving tasks to CSV file: {file_path}")
         try:
             with open(file_path, 'w', newline='') as csv_file:
                 writer = csv.writer(csv_file)
@@ -393,6 +429,7 @@ class TaskFileManager:
                         task.created_date.strftime('%Y-%m-%d %H:%M'),
                         ', '.join(task.tags)
                     ])
+            print(f"Successfully saved {len(self.tasks)} tasks to CSV file")
         except IOError as e:
             raise IOError(f"Error saving to CSV file: {e}")
 
@@ -407,6 +444,7 @@ class TaskFileManager:
             IOError: If there's an error reading from the file.
             ValueError: If the CSV data is invalid.
         """
+        print(f"Loading tasks from CSV file: {file_path}")
         try:
             with open(file_path, 'r') as csv_file:
                 reader = csv.DictReader(csv_file)
@@ -428,7 +466,7 @@ class TaskFileManager:
         except (ValueError, IndexError) as e:
             raise ValueError(f"Invalid CSV data: {e}")
         
-    def file_task(self, task, format='json', overwrite=False, merge=False):
+    def file_task(self, task, file_path, format='json', overwrite=False, merge=False):
         """
         Add a new task to the file in the specified format.
 
@@ -441,23 +479,23 @@ class TaskFileManager:
         Raises:
             ValueError: If the format is not recognized.
         """
+        print(f"Filing task: {task.title}, Format: {format}, Overwrite: {overwrite}, Merge: {merge}")
         if format not in ['json', 'csv']:
             raise ValueError("Unrecognized format. Please use 'json' or 'csv'.")
 
         if format == 'json':
-            existing_tasks = self.load_tasks_from_json()
+            self.load_tasks_from_json(file_path)
         elif format == 'csv':
-            existing_tasks = self.load_tasks_from_csv()
+            self.load_tasks_from_csv(file_path)
 
-        existing_task = next((t for t in existing_tasks if t.title == task.title), None)
+        existing_task = next((t for t in self.tasks if t.title == task.title), None)
 
         if existing_task:
             if overwrite:
-                existing_tasks.remove(existing_task)
-                existing_tasks.append(task)
+                self.tasks.remove(existing_task)
                 print(f"Task '{task.title}' has been replaced.")
             elif merge:
-                existing_task.description = task.description  # You might want to merge other attributes
+                existing_task.description = task.description
                 existing_task.priority = task.priority
                 existing_task.deadline_date = task.deadline_date
                 existing_task.status = task.status
@@ -466,17 +504,17 @@ class TaskFileManager:
             else:
                 count = 1
                 new_title = f"{task.title}_{count}"
-                while any(t.title == new_title for t in existing_tasks):
+                while any(t.title == new_title for t in self.tasks):
                     count += 1
                     new_title = f"{task.title}_{count}"
                 task.title = new_title
-                existing_tasks.append(task)
                 print(f"Task '{task.title}' has been added with a unique title.")
         else:
-            existing_tasks.append(task)
             print(f"Task '{task.title}' has been successfully added.")
 
+        self.tasks.append(task)
+
         if format == 'json':
-            self.save_tasks_to_json(existing_tasks)
+            self.save_tasks_to_json(file_path)
         elif format == 'csv':
-            self.save_tasks_to_csv(existing_tasks)
+            self.save_tasks_to_csv(file_path)
