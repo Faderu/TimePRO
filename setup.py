@@ -10,7 +10,7 @@ classifiers = [
  
 setup(
   name='timepro',
-  version='0.0.3',
+  version='0.0.4',
   description='A package for managing time effectively, including Pomodoro Timer, Task Manager, Deadline Tracker, and more.',
   long_description=open('README.md', encoding='utf-8').read(),
   long_description_content_type='text/markdown',
